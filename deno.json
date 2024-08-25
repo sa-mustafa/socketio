@@ -3,11 +3,10 @@
     "lib": ["deno.ns"]
   },
   "imports": {
-    "@std/": "https://deno.land/std@0.114.0/",
-    "oak": "https://deno.land/x/oak@v7.7.0/mod.ts",
-    "socket_io": "https://deno.land/x/socket_io@0.2.0/mod.ts"
+    "@oak/oak": "jsr:@oak/oak@^16.1.0",
+    "@std/path": "jsr:@std/path@^1.0.2"
   },
   "tasks": {
-    "start": "deno run --import-map --allow-net --allow-read --allow-env --watch server.ts"
+    "start": "deno run --allow-net --allow-read --allow-env --watch  index.ts"
   }
 }
