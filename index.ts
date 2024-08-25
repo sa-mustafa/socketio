@@ -1,7 +1,7 @@
-import { Application, Router, serve } from "https://deno.land/x/oak@v9.1.1/mod.ts";
-import { Server } from "https://deno.land/x/socket_io@v2.0.0/mod.ts";
-import { join, dirname } from "https://deno.land/std@0.122.0/path/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.122.0/fs/ensure_dir.ts";
+import { join, dirname } from "@std/path";
+import { ensureDir } from "@std/fs";
+import { Application, Router, serve } from "https://deno.land/x/oak/mod.ts";
+import { Server } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
 
 const __dirname = dirname(new URL(import.meta.url).pathname);
 const app = new Application();
