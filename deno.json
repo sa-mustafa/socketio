@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["deno.ns"]
+  },
+  "imports": {
+    "@std/": "https://deno.land/std@0.114.0/",
+    "oak": "https://deno.land/x/oak@v7.7.0/mod.ts",
+    "socket_io": "https://deno.land/x/socket_io@0.2.0/mod.ts"
+  },
+  "tasks": {
+    "start": "deno run --import-map --allow-net --allow-read --allow-env --watch server.ts"
+  }
+}
