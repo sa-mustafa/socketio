@@ -1,15 +1,12 @@
 import { dirname } from "@std/path";
 import { join } from "@std/path/join";
-import { Application, Router, serve } from "https://deno.land/x/oak/mod.ts";
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { Server } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
 
 const __dirname = dirname(new URL(import.meta.url).pathname);
 const app = new Application();
 const router = new Router();
 const port = parseInt(Deno.env.get("PORT") || "3000");
-
-// Serve static files from the "public" directory
-app.use(serve(join(__dirname, "public")));
 
 // Define routes (if needed, add more routes here)
 router.get("/", (ctx) => {
