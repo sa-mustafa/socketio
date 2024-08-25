@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.io Client</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.js"></script>
+  </head>
+  <body>
+    <h1>Socket.io Client</h1>
+    <script>
+      const socket = io("https://ws-magic.glitch.me"); // Replace with your server address
+
+      socket.on("connect", () => {
+        console.log("Connected to server!");
+      });
+
+      socket.on("welcome", (data) => {
+        console.log(data.message);
+      });
+
+      // Add your own client-side logic here to send messages
+      // and interact with the server
+    </script>
+  </body>
+</html>

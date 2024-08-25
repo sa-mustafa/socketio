@@ -1,0 +1,30 @@
+{
+  "name": "socketio",
+  "version": "1.0.0",
+  "description": "A simple socket.io Node app built with Koa, instantly up and running.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sa-mustafa/socketio.git"
+  },
+  "keywords": [
+    "node",
+    "koa",
+    "socket.io"
+  ],
+  "author": "sam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sa-mustafa/socketio/issues"
+  },
+  "homepage": "https://github.com/sa-mustafa/socketio#readme",
+  "dependencies": {
+    "koa": "^2.15.3",
+    "koa-static": "^5.0.0",
+    "socket.io": "^4.7.5"
+  }
+}
