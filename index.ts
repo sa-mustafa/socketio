@@ -1,5 +1,5 @@
-import { join, dirname } from "@std/path";
-import { ensureDir } from "@std/fs";
+import { dirname } from "@std/path";
+import { join } from "@std/path/join";
 import { Application, Router, serve } from "https://deno.land/x/oak/mod.ts";
 import { Server } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
 
