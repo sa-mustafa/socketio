@@ -1,7 +1,8 @@
-import { dirname } from "@std/path";
-import { join } from "@std/path/join";
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { Server } from "https://deno.land/x/socket_io@0.2.0/mod.ts";
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { dirname } from "@std/path";
+import { join } from "@std/path/join";
 
 const __dirname = dirname(new URL(import.meta.url).pathname);
 const app = new Application();
@@ -17,41 +18,48 @@ app.use(router.allowedMethods());
 
 const clients: Record<string, any> = {};
 
-// WebSocket logic
-const server = new Server(app.listen({ port })); // Use Oak's listen method
+const io = new Server({
+  cors: {
+    // Allow any origin
+    allowedOrigins: ["*"],
+  },
+});
 
-server.on("connection", (socket) => {
-  console.log(`Client connected: ${socket.remoteAddr}`);
+io.on("connection", (socket) => {
+  console.log(`Client connected: ${socket.id}`);
 
   // Send welcome message on connection
-  socket.send(JSON.stringify({ message: "Welcome to the WebSocket server!" }));
+  socket.emit("message", { message: "Welcome to the WebSocket server!" });
 
-  socket.on("message", (msg) => {
-    const data = JSON.parse(msg as string);
-    if (data.type === "register") {
-      clients[data.clientId] = socket;
-      console.log(`Client registered: ${data.clientId}`);
-    } else if (data.type === "notify") {
-      const socketId = clients[data.clientId];
-      if (socketId) {
-        socketId.send(JSON.stringify({ type: "on_result", message: data.message }));
-      }
-    }
+  socket.on("register", (clientId) => {
+    clients[clientId] = socket.id;
+    console.log(`Client registered: ${clientId}`);
   });
 
-  socket.onClose = () => {
+  socket.on("disconnect", () => {
     for (const clientId in clients) {
-      if (clients[clientId] === socket) {
+      if (clients[clientId] === socket.id) {
         delete clients[clientId];
         console.log(`Client disconnected: ${clientId}`);
         break;
       }
     }
-  };
+  });
 
-  socket.onError = (err) => {
+  socket.on("error", (err) => {
     console.error("WebSocket error:", err);
-  };
+  });
+
+  socket.on("notify", (clientId, message) => {
+    const socketId = clients[clientId];
+    if (!socketId) return;
+
+    io.to(socketId).emit("on_result", message);
+  });
+});
+
+await serve(io.handler(), {
+  port: 3000,
 });
 
 console.log(`Server is running on port ${port}`);
