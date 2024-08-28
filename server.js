@@ -29,10 +29,10 @@ const clients = {};
 
 // Socket.IO logic
 io.on("connection", (socket) => {
-  console.log(`client connected: ${socket.id}`);
+  console.log(`Client connected: ${socket.id}; total connections: ${clients.length}`);
 
   // Send welcome message on connection
-  socket.emit("welcome", { message: "Welcome to the WebSocket server!" });
+	socket.emit("message", "Welcome to the WebSocket server!");
 
   socket.on("register", (clientId) => {
     clients[clientId] = socket.id;
@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
     for (let clientId in clients) {
       if (clients[clientId] === socket.id) {
         delete clients[clientId];
-        console.log(`client disconnected: ${clientId}`);
+        console.log(`Client disconnected: ${clientId}; total connections: ${clients.length}`);
         break;
       }
     }
@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
     const socketId = clients[clientId];
     if (!socketId) return;
 
-    io.to(socketId).emit("on_result", message);
+    io.to(socketId).emit("result", message);
   });
 
   socket.on("connect_error", (err) => {
