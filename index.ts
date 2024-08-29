@@ -56,6 +56,7 @@ io.on("connection", (socket) => {
 
 		console.log(`Client ${clientId} is being notified.`);
     io.to(socketId).emit("result", message);
+		socket.emit("notify_ack", clientId);
   });
 });
 
