@@ -26,7 +26,7 @@ const io = new Server({
 });
 
 io.on("connection", (socket) => {
-  console.log(`Client connected: ${socket.id}; total connections: ${clients.length}`);
+  console.log(`Client connected: ${socket.id}; total connections: ${Object.keys(clients).length}`);
 
   // Send welcome message on connection
   socket.emit("message", "Welcome to the WebSocket server!");
@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
     for (const clientId in clients) {
       if (clients[clientId] === socket.id) {
         delete clients[clientId];
-        console.log(`Client disconnected: ${clientId}; total connections: ${clients.length}`);
+        console.log(`Client disconnected: ${clientId}; total connections: ${Object.keys(clients).length}`);
         break;
       }
     }
