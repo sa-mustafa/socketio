@@ -54,6 +54,7 @@ io.on("connection", (socket) => {
     const socketId = clients[clientId];
     if (!socketId) return;
 
+		console.log(`Client ${clientId} is being notified.`);
     io.to(socketId).emit("result", message);
   });
 });
