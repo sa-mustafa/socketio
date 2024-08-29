@@ -16,7 +16,8 @@ router.get("/", (ctx) => {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-const clients: Record<string, any> = {};
+const clients = new Map();
+const sockets = new Map();
 
 const io = new Server({
   cors: {
@@ -26,39 +27,40 @@ const io = new Server({
 });
 
 io.on("connection", (socket) => {
-  console.log(`Client connected: ${socket.id}; total connections: ${Object.keys(clients).length}`);
+  console.log(`Client connected: ${socket.id}; total connections: ${clients.size}`);
 
   // Send welcome message on connection
   socket.emit("message", "Welcome to the WebSocket server!");
 
   socket.on("register", (clientId) => {
-    clients[clientId] = socket.id;
+    clients.set(clientId, socket.id);
+    sockets.set(socket.id, clientId);
     console.log(`Client registered: ${clientId}`);
   });
 
   socket.on("disconnect", () => {
-    for (const clientId in clients) {
-      if (clients[clientId] === socket.id) {
-        delete clients[clientId];
-        console.log(`Client disconnected: ${clientId}; total connections: ${Object.keys(clients).length}`);
-        break;
-      }
-    }
-  });
+    const clientId = sockets.get(socket.id);
+    if (!clientId) return;
+    
+    clients.delete(clientId);
+    sockets.delete(socket.id);
+    console.log(`Client disconnected: ${clientId}; total connections: ${clients.size}`);
+ });
 
   socket.on("error", (err) => {
     console.error("WebSocket error:", err);
   });
 
   socket.on("notify", (clientId, message) => {
-    const socketId = clients[clientId];
+    const socketId = clients.get(clientId);
     if (!socketId) return;
 
-		console.log(`Client ${clientId} is being notified.`);
+    console.log(`Client ${clientId} is being notified.`);
     io.to(socketId).emit("result", message);
-		socket.emit("notify_ack", clientId);
+    socket.emit("notify_ack", clientId);
   });
 });
+
 
 await serve(io.handler(), {
   port: 3000,
