@@ -53,7 +53,10 @@ io.on("connection", (socket) => {
 
   socket.on("notify", (clientId, message) => {
     const socketId = clients.get(clientId);
-    if (!socketId) return;
+    if (!socketId) {
+			socket.emit("notify_nak", clientId);
+			return;
+		}
 
     console.log(`Client ${clientId} is being notified.`);
     io.to(socketId).emit("result", message);
